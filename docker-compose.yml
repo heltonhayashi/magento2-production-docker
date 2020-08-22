@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  magento_web:
+    build: .
+    ports:
+      - "80:80"
+    volumes:
+      - "/var/www/html:/var/www/html"

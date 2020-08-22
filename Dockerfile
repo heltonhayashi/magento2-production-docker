@@ -15,6 +15,7 @@ RUN set -ex; \
 		vim \
 		supervisor \
 		composer \
+		curl \
 	"; \
 	PHPExtensions="\
 		php${PHP_VERSION} \
@@ -24,7 +25,9 @@ RUN set -ex; \
 		php${PHP_VERSION}-gd \
 		php${PHP_VERSION}-iconv \
 		php${PHP_VERSION}-pdo \
+		php${PHP_VERSION}-mysql \
 		php${PHP_VERSION}-mbstring \
+		php${PHP_VERSION}-mcrypt \
 		php${PHP_VERSION}-memcached \
 		php${PHP_VERSION}-json \
 		php${PHP_VERSION}-soap \
@@ -35,7 +38,11 @@ RUN set -ex; \
 		php${PHP_VERSION}-common \
 		php${PHP_VERSION}-xsl \
 		php${PHP_VERSION}-dom \
+		php${PHP_VERSION}-intl \
 	"; \
+	apt-get update; \
+	apt-get install --no-install-recommends -qy software-properties-common; \
+	add-apt-repository ppa:ondrej/php; \
 	apt-get update; \
 	apt-get install --no-install-recommends -qy $AptPackages $PHPExtensions; \
 	apt-get clean;
@@ -47,5 +54,8 @@ COPY ./config/nginx/magento.conf.sample /etc/nginx/conf.d/magento.conf.sample
 COPY ./config/nginx/host.conf /etc/nginx/conf.d/default.conf
 COPY ./config/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
+RUN mkdir -p /var/run/php
 
 EXPOSE 80
+
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
