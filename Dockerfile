@@ -40,5 +40,12 @@ RUN set -ex; \
 	apt-get install --no-install-recommends -qy $AptPackages $PHPExtensions; \
 	apt-get clean;
 
+COPY ./config/php/php.ini /etc/php/${PHP_VERSION}/fpm/conf.d/zzz-custom.ini
+COPY ./config/php/php-fpm.conf /etc/php/${PHP_VERSION}/fpm/pool.d/zzz-custom.conf
+COPY ./config/nginx/nginx.conf /etc/nginx/nginx.conf
+COPY ./config/nginx/magento.conf.sample /etc/nginx/conf.d/magento.conf.sample
+COPY ./config/nginx/host.conf /etc/nginx/conf.d/default.conf
+COPY ./config/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
 
 EXPOSE 80
